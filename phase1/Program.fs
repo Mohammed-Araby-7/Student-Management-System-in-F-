@@ -21,6 +21,54 @@ let createDatabase dbPath =
         command.ExecuteNonQuery() |> ignore
 
 
+        
+// Operation
+
+
+
+fsharp
+fsharp
+// Function to add a student to the database
+let addStudent (student: Student) (dbPath: string) =
+    use connection = new SQLiteConnection($"Data Source={dbPath};Version=3;")
+    connection.Open()
+    let command = connection.CreateCommand()
+    command.CommandText <- 
+        "INSERT INTO Students (Name, Grades) VALUES (@name, @grades);"
+    command.Parameters.AddWithValue("@name", student.Name)
+    command.Parameters.AddWithValue("@grades", String.Join(",", student.Grades))
+    command.ExecuteNonQuery() |> ignore
+
+// Function to delete a student from the database by ID
+let deleteStudentById (id: int) (dbPath: string) =
+    use connection = new SQLiteConnection($"Data Source={dbPath};Version=3;")
+    connection.Open()
+    let command = connection.CreateCommand()
+    command.CommandText <- "DELETE FROM Students WHERE Id = @id;"
+    command.Parameters.AddWithValue("@id", id)
+    command.ExecuteNonQuery() |> ignore
+
+// Function to retrieve all students from the database
+let getStudents (dbPath: string) : Student list =
+    use connection = new SQLiteConnection($"Data Source={dbPath};Version=3;")
+    connection.Open()
+    let command = connection.CreateCommand()
+    command.CommandText <- "SELECT * FROM Students;"
+    use reader = command.ExecuteReader()
+    let mutable students = []
+    while reader.Read() do
+        let id = reader.GetInt32(0)
+        let name = reader.GetString(1)
+        let grades = reader.GetString(2).Split(',') |> Array.map float |> Array.toList
+        students <- { Id = id; Name = name; Grades = grades } :: students
+    students
+
+
+
+
+
+
+
 // GUI 
 
 open System.Windows.Forms

@@ -241,6 +241,19 @@ addButton.Click.Add(fun _ ->)
 
     if not (validateGrades grades) then
         MessageBox.Show("Grades must be between 0 and 100.") |> ignore 
+
+// Logic to manage user roles
+let updateButtonAccess (adminRadioButton: RadioButton, addButton: Button, deleteButton: Button, deleteIdInput: TextBox) =
+    let isAdmin = adminRadioButton.Checked
+    addButton.Enabled <- isAdmin
+    deleteIdInput.Enabled <- isAdmin
+    deleteButton.Enabled <- isAdmin
+
+// Event handlers for role selection
+adminRadioButton.CheckedChanged.Add(fun _ -> updateButtonAccess(adminRadioButton, addButton, deleteButton, deleteIdInput))
+viewerRadioButton.CheckedChanged.Add(fun _ -> updateButtonAccess(adminRadioButton, addButton, deleteButton, deleteIdInput))
+updateButtonAccess(adminRadioButton, addButton, deleteButton, deleteIdInput)
+
 // Entry point for the application
 [<EntryPoint>]
 let main argv =

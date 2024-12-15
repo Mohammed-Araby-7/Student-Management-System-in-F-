@@ -221,7 +221,26 @@ let createForm(dbPath: string) =
     // Add controls to the form
     form.Controls.AddRange([| roleLabel; adminRadioButton; viewerRadioButton; nameLabel; nameInput; deleteIdLabel; deleteIdInput; addButton; viewButton; statsButton; deleteButton |])
     form
+// Data validation for grades input
+let validateGrades grades =
+    grades |> List.forall (fun g -> g >= 0.0 && g <= 100.0)
 
+// Example usage in add student event handler
+addButton.Click.Add(fun _ ->)
+    let grades =
+        try 
+            gradeInputs |> List.map (fun tb -> 
+                let text = tb.Text.Trim()
+                if String.IsNullOrWhiteSpace(text) then
+                    raise (System.FormatException())
+                float text)
+        with
+        | :? System.FormatException -> 
+            MessageBox.Show("Please enter valid numeric grades for all subjects.") |> ignore
+            []
+
+    if not (validateGrades grades) then
+        MessageBox.Show("Grades must be between 0 and 100.") |> ignore 
 // Entry point for the application
 [<EntryPoint>]
 let main argv =

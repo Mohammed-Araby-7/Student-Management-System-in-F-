@@ -26,8 +26,7 @@ let createDatabase dbPath =
 
 
 
-fsharp
-fsharp
+
 // Function to add a student to the database
 let addStudent (student: Student) (dbPath: string) =
     use connection = new SQLiteConnection($"Data Source={dbPath};Version=3;")

@@ -64,6 +64,24 @@ let getStudents (dbPath: string) : Student list =
 
 
 
+// Function to calculate average grade for a student
+let calculateAverage (grades: float list) : float =
+    if List.isEmpty grades then 0.0 else List.average grades
+
+// Function to get class statistics
+let classStatistics (studentList: Student list) =
+    if List.isEmpty studentList then
+        (0, 0, 0, 0.0, 0.0) // Avoid errors if no students
+    else
+        let totalStudents = List.length studentList
+        let passedStudents = 
+            studentList 
+            |> List.filter (fun s -> List.forall (fun g -> g >= 50.0) s.Grades) // Passed if all grades >= 50
+            |> List.length
+        let failedStudents = totalStudents - passedStudents // Calculate failed students
+        let highestGrade = studentList |> List.collect (fun s -> s.Grades) |> List.max
+        let lowestGrade = studentList |> List.collect (fun s -> s.Grades) |> List.min
+        (totalStudents, passedStudents, failedStudents, highestGrade, lowestGrade)
 
 
 
@@ -214,22 +232,4 @@ let main argv =
     Application.Run(createForm dbPath)
 
 
-// Function to calculate average grade for a student
-let calculateAverage (grades: float list) : float =
-    if List.isEmpty grades then 0.0 else List.average grades
-
-// Function to get class statistics
-let classStatistics (studentList: Student list) =
-    if List.isEmpty studentList then
-        (0, 0, 0, 0.0, 0.0) // Avoid errors if no students
-    else
-        let totalStudents = List.length studentList
-        let passedStudents = 
-            studentList 
-            |> List.filter (fun s -> List.forall (fun g -> g >= 50.0) s.Grades) // Passed if all grades >= 50
-            |> List.length
-        let failedStudents = totalStudents - passedStudents // Calculate failed students
-        let highestGrade = studentList |> List.collect (fun s -> s.Grades) |> List.max
-        let lowestGrade = studentList |> List.collect (fun s -> s.Grades) |> List.min
-        (totalStudents, passedStudents, failedStudents, highestGrade, lowestGrade)
 

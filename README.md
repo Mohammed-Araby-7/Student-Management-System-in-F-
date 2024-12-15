@@ -1,4 +1,7 @@
-# Student Management System
+*Mohamed Mostafa - Documentation and GitHub Management*
+- *Task*: Manage project documentation and GitHub repository.
+- *Code Snippet*: (README template)
+- # Student Management System
 
 ## Overview
 
